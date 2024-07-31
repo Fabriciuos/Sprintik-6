@@ -77,7 +77,7 @@ func getTask(w http.ResponseWriter, r *http.Request) {
 
     task, ok := tasks[id]
     if !ok {
-        http.Error(w, "", http.StatusNoContent)
+        http.Error(w, "", http.StatusBadRequest)
         return
     }
 
@@ -97,6 +97,12 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
     var buf bytes.Buffer
 
     id := chi.URLParam(r, "id")
+
+    _, ok := tasks[id]
+    if !ok {
+        http.Error(w, "", http.StatusBadRequest)
+        return
+    }
 
     _, err := buf.ReadFrom(r.Body)
     if err != nil {
